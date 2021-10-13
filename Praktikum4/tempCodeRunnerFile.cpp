@@ -1,0 +1,4 @@
+r++){
+        cout << ++ptr;
+        break;
+    }
