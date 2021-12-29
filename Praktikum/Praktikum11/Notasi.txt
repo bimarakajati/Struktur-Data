@@ -1,0 +1,37 @@
+Bima Rakajati
+A11.2020.13088
+
+type node:<
+    data: integer
+    next: pointer to node
+    >
+type Node: pointer to node
+
+type List:<
+    TOP: pointer to node
+    >
+type Stack: pointer to List
+
+procedure Push(S: pointer to Stack, x: integer)
+    IF Node equals to NULL then
+        temp <- new Node
+        temp->data <- x
+        IF TOP equals to NULL then
+            TOP <- temp
+        ELSE
+            temp <- TOP
+        temp->next <- TOP
+        TOP <- temp
+
+procedure Pop(S: pointer to Stack)
+    IF Node not equals to NULL then
+        Hapus <- TOP
+        TOP <- TOP->next
+        Hapus->next <- NULL
+        delete Hapus
+
+procedure cetak(S: pointer to Stack)
+    temp: pointer to Stack
+    WHILE temp not equals to TOP do
+        output: temp->data
+        temp <- temp->next

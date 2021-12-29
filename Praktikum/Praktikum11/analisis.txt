@@ -1,0 +1,7 @@
+Pertama saya mendeklarasikan batas Stack dengan "define Max 5", lalu saya buat variabel global bertipe data Integer dengan nama maxStack yang menunjuk ke Max.
+
+Selanjutnya saya membuat fungsi bertipe data Boolean bernama "isFull()" yang berisi sebuah kondisi yang apabila "numberOfElement()" (Sebuah fungsi untuk mengembalikan jumlah elemen pada Stack) sama dengan maxStack, maka akan me-return true, apabila else maka akan me-return false.
+
+Lalu, saya akan memanggil "isFull()" pada fungsi "push()", yang apabila hasil dari isFull() mengembalikan nilai true maka program akan mengeluarkan output "stack penuh", dan apabila false maka program akan meng-push seperti biasa.
+
+Berikut, adalah contoh ketika user meng-push lebih dari Max (5) node, maka akan muncul "stack penuh".

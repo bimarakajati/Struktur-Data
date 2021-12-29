@@ -1,0 +1,120 @@
+{ Notasi Algoritmik Kasus 1 }
+{ Bima Rakajati }
+{ A11.2020.13088 }
+
+type node
+<
+    data: integer
+    next: pointer to node
+>
+type head: pointer to node
+
+procedure createSingleLinkedList(x: integer)
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: temp
+    2. Buat node baru pada temp
+    3. Isi data dengan nilai x
+    4. Buat kondisi apabila Head sama dengan kosong, maka isi Head dengan temp
+}
+{
+    node <- *temp
+    temp <- new node
+    temp.data <- x
+    jika Head kosong, maka 
+        Head <- temp
+}
+
+procedure InsertDepan(x: integer)
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: temp
+    2. Buat node baru pada temp
+    3. Buat kondisi apabila Head sama dengan kosong, maka output "Daftar kosong"
+    4. Jika tidak, isi data dengan nilai x. Masukkan Head ke dalam temp
+    5. Masukkan temp ke Head
+}
+{
+    node <- *temp
+    temp <- new node
+    jika Head kosong
+        output <- Daftar kosong, silakan buat daftar baru terlebih dahulu
+    jika tidak
+        temp.data <- x
+        temp.next <- Head
+        Head <- temp
+}
+
+procedure InsertBelakang(x: integer)
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: temp, dan bantu
+    2. Buat node baru pada temp
+    3. Buat kondisi apabila Head sama dengan kosong, maka output "Daftar kosong"
+    4. Jika tidak, isi data dengan nilai x. Masukkan Head ke dalam bantu
+    5. Buat perulangan dengan kondisi bantu.next tidak sama dengan NULL
+    6. Apabila kondisi terpenuhi, masukkan temp ke dalam next
+}
+{
+    node <- *temp, *bantu
+    temp <- new node
+    jika Head kosong
+        output <- Daftar kosong, silakan buat daftar baru terlebih dahulu
+    jika tidak
+        temp.data <- x
+        bantu <- Head
+        while bantu.next tidak kosong, maka 
+            bantu <- bantu.next
+        bantu.next <- temp
+}
+
+procedure HapusDepan()
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: Hapus
+    2. Masukkan Head pada Hapus
+    3. Masukkan next pada Head
+    4. Dealokasi variabel Hapus
+}
+{
+    node <- *Hapus
+    Hapus <- Head
+    Head <- Head.next
+    delete Hapus
+}
+
+procedure HapusBelakang()
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: Hapus, dan temp
+    2. Masukkan Head pada Hapus
+    3. Buat kondisi apabila Hapus tidak kosong, 
+       maka buat kondisi apabila next tidak kosong
+    4. Apabila terpenuhi, masukkan Hapus ke dalam temp
+    5. Buat Hapus.next agar terjadi perulangan sampai kondisi terpenuhi
+    6. Buat next sama dengan null
+    7. Dealokasi variabel Hapus
+}
+{
+    node <- *Hapus, *temp
+    Hapus <- Head
+    while Hapus tidak kosong
+        jika Hapus.next tidak kosong, maka 
+            temp <- Hapus
+        Hapus <- Hapus.next
+    temp.next <- NULL
+    delete Hapus
+}
+
+procedure cetak()
+{ Proses:
+    1. Melakukan alokasi sebuah elemen. Misal: temp
+    2. Masukkan Head pada temp
+    3. Buat perulangan dengan kondisi temp.next tidak kosong
+    4. Apabila terpenuhi outputkan temp.data (Elemen/node pada Linked List)
+    5. Buat temp.next agar perulangan bisa terpenuhi
+}
+{
+    node <- *temp
+    temp <- Head
+    while temp.next tidak kosong, maka
+        output temp.data
+        temp <- temp.next
+    output temp.data
+    output NULL
+}

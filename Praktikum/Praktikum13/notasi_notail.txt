@@ -1,0 +1,89 @@
+Bima Rakajati
+A11.2020.13088
+
+type Tnode:<
+    data: integer
+    next: pointer to Tnode
+    prev: pointer to Tnode
+> head: pointer to Tnode
+
+procedure init()
+    head <- NULL
+
+procedure alokasi(databaru: integer)
+    baru: pointer to Tnode
+    baru <- new Tnode
+    baru->data <- databaru
+    baru->next <- NULL
+    baru->prev <- NULL
+    return <- baru
+
+procedure isEmpty()
+    IF head equals to NULL then
+        return <- 1
+    ELSE
+        return <- 0
+
+procedure insertDepan(databaru: integer)
+    baru: pointer to Tnode
+    baru <- alokasi(databaru)
+    IF isEmpty() equals to 1 then
+        head <- baru
+        head->next <- NULL
+        head->prev <- NULL
+    ELSE
+        baru->next <- head
+        head-prev = baru
+        head = baru
+
+procedure insertBelakang(databaru: integer)
+    bantu: pointer to Tnode
+    baru: pointer to Tnode
+    baru <- alokasi(databaru)
+    IF isEmpty() equals to 1 then
+        head <- baru
+        head->next <- NULL
+        head->prev <- NULL
+    ELSE
+        bantu <- head
+        WHILE bantu-next not equals to NULL do
+            bantu <- bantu->next
+        bantu->next <- baru
+        baru->prev <- bantu
+
+procedure hapusTengah(x: integer)
+    Hapus: pointer to Tnode
+    IF isEmpty() equals to 1 then
+        output "Masih kosong"
+    ELSE
+        Hapus <- head
+        WHILE Hapus not equals to NULL do
+            IF Hapus->data equals to x then
+                IF Hapus equals to head then // Hapus awal
+                    head <- head->next
+                    head->prev <- NULL
+                    Hapus->next <- NULL
+                    free Hapus
+                ELSE IF Hapus equals to tail then // Hapus akhir
+                    tail <- tail->prev
+                    tail->next <- NULL
+                    Hapus->prev <- NULL
+                    free Hapus
+                ELSE // Hapus tengah
+                    Hapus->prev->next <- Hapus->next
+                    hapus->next->prev <- hapus->prev
+                    Hapus->next <- NULL
+                    Hapus->prev <- NULL
+                    free Hapus
+            ELSE
+                Hapus = Hapus->next
+
+procedure tampil()
+    bantu: pointer to Tnode
+    bantu <- head
+    IF isEmpty() equals to 0 then
+        WHILE bantu not equals to NULL do
+            output "bantu->data"
+            bantu <- bantu->next
+    ELSE
+        output "Masih kosong"
