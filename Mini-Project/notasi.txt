@@ -1,0 +1,299 @@
+TYPE node:<
+    posisi: string
+    nama: string
+    next: pointer to node
+    child: pointer to node
+> head, tail: pointer to node
+
+strikeTail, midTail, defTail, goalTail: pointer to node
+Pemain: integer <- 0
+maxPemain: integer <- 11
+
+FUNCTION cekSemuaPemain(namaPemain: string)
+    {Fungsi untuk mengecek semua posisi apabila nama pemain terdapat di node}
+    {Kamus Lokal}
+    pos, tmp: pointer to node
+    ketemu: boolean <- FALSE
+    {Algoritma}
+    pos <- head.next
+    WHILE (pos not equals to NULL) DO
+        tmp <- pos
+        WHILE (tmp not equals to NULL) DO
+            IF (namaPemain equals to tmp.nama) THEN
+                ketemu <- TRUE
+                RETURN ketemu
+            tmp <- tmp.child
+        pos <- pos.next
+    IF (not ketemu) THEN
+        RETURN ketemu
+{END OF FUNCTION}
+
+FUNCTION cekNamaPemain(namaPemain: string, posisi: string)
+    {Fungsi untuk mengecek suatu posisi apabila nama pemain terdapat di node}
+    {Kamus Lokal}
+    pos, tmp: pointer to node
+    ketemu: boolean <- FALSE
+    {Algoritma}
+    pos <- head
+    WHILE (pos not equals to NULL) DO
+        IF (pos.posisi equals to posisi) THEN
+            tmp <- pos.child
+            WHILE (tmp not equals to NULL) DO
+                IF (tmp.nama equals to namaPemain) THEN
+                    ketemu <- TRUE
+                    RETURN ketemu
+                tmp <- tmp.child
+        pos <- pos.next
+    IF (not ketemu) THEN
+        RETURN ketemu
+{END OF FUNCTION}
+
+FUNCTION buat_posisi(tmp: pointer to node, posisi: string)
+    {Fungsi untuk membuat parent node/posisi}
+    {Kamus Lokal}
+    tmp <- new node
+    tmp.posisi <- posisi
+    tmp.next <- NULL
+    tmp.child <- NULL
+    {Algoritma}
+    IF (head equals to NULL) THEN
+        head <- tmp
+        tail <- head
+    ELSE
+        tail.next <- tmp
+        tail <- tmp
+{END OF FUNCTION}
+
+FUNCTION alokasi: pointer to node(databaru: string)
+    {Fungsi untuk membuat node baru/alokasi}
+    {Kamus Lokal}
+    tmp: pointer to node
+    tmp <- new node
+    tmp.nama <- databaru
+    tmp.child <- NULL
+    {Algoritma}
+    RETURN tmp
+{END OF FUNCTION}
+
+FUNCTION tambah(newNode: pointer to node, newPlayer: string, posisi: string)
+    {Fungsi untuk menambah pemain (child) berdasarkan posisi (parent)}
+    {Kamus Lokal}
+    pos: pointer to node
+    {Algoritma}
+    IF (Pemain not equals maxPemain) THEN
+        IF (cekSemuaPemain(newPlayer) is TRUE) THEN
+            output "Pemain sudah ada"
+        ELSE
+            pos <- head
+            WHILE (pos not equals to NULL) DO
+                IF (pos.posisi equals to posisi) THEN
+                    newNode <- alokasi(newPlayer)
+                    IF (posisi equals to "Striker") THEN
+                        IF (strikeTail equals to NULL) THEN
+                            pos.child <- newNode
+                            strikeTail <- newNode
+                        ELSE
+                            strikeTail.child <- newNode
+                            strikeTail <- newNode
+                    ELSE IF (posisi equals to "Midfielder") THEN
+                        IF (midTail equals to NULL) THEN
+                            pos.child <- newNode
+                            midTail <- newNode
+                        ELSE
+                            midTail.child <- newNode
+                            midTail <- newNode
+                    ELSE IF (posisi equals to "Defender") THEN
+                        IF (defTail equals to NULL) THEN
+                            pos.child <- newNode
+                            defTail <- newNode
+                        ELSE
+                            defTail.child <- newNode
+                            defTail <- newNode
+                    ELSE
+                        IF (goalTail equals to NULL) THEN
+                            pos.child <- newNode
+                            goalTail <- newNode
+                        ELSE
+                            goalTail.child <- newNode
+                            goalTail <- newNode
+                pos <- pos.next
+            Pemain +=1
+    ELSE
+        output "Total pemain maks 11!"
+{END OF FUNCTION}
+
+FUNCTION hapus(namaPemain: string, posisi: string)
+    {Fungsi untuk menghapus pemain (child) dalam suatu posisi (parent)}
+    {Kamus Lokal}
+    pos, tmp, prev, hapus: pointer to node
+    {Algoritma}
+    IF (cekNamaPemain(namaPemain, posisi) is FALSE) THEN
+        output "Nama tidak ditemukan"
+    ELSE
+        pos <- head
+        WHILE (pos not equals to NULL) DO
+            IF (pos.posisi equals to posisi) THEN
+                tmp <- pos
+                IF (posisi equals to "Striker") THEN
+                    IF (namaPemain equals to strikeTail.nama) THEN
+                        WHILE (tmp.child not equals to strikeTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        prev <- tmp
+                        prev.child <- NULL
+                        delete hapus
+                        break
+                ELSE IF (posisi equals to "Midfielder") THEN
+                    IF (namaPemain equals to midTail.nama) THEN
+                        WHILE (tmp.child not equals to midTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        prev <- tmp
+                        prev.child <- NULL
+                        delete hapus
+                        break
+                ELSE
+                    IF (namaPemain equals to defTail.nama) THEN
+                        WHILE (tmp.child not equals to defTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        prev <- tmp
+                        prev.child <- NULL
+                        delete hapus
+                        break
+                WHILE (tmp not equals to NULL) DO
+                    IF (tmp.child.nama equals to namaPemain) THEN
+                        prev <- tmp
+                        hapus <- prev.child
+                        break
+                    tmp = tmp.child
+                prev.child <- hapus.child
+                hapus.child <- NULL
+                delete hapus
+            pos = pos.next
+        Pemain -=1
+{END OF FUNCTION}
+
+FUNCTION subtitusi(newNode: pointer to node, oldPlayer: string, newPlayer: string, posisi: string)
+    {Fungsi melakukan pergantian node berdasarkan input nama pemain pengganti dan nama pemain yang diganti}
+    {Kamus Lokal}
+    pos, tmp, hapus, prev: pointer to node
+    {Algoritma}
+    IF (cekNamaPemain(oldPlayer, posisi) is FALSE) THEN
+        output "Nama tidak ditemukan"
+    ELSE
+        IF (cekSemuaPemain(newPlayer) is TRUE) THEN
+            output "Pemain sudah ada"
+        ELSE
+            pos <- head
+            WHILE (pos not equals to NULL) DO
+                tmp <- pos
+                IF (pos.posisi equals to "Striker")
+                    IF (oldPlayer equals to strikeTail.nama) THEN
+                        WHILE (tmp.child not equals to strikeTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        newNode = alokasi(newPlayer)
+                        tmp.child <- newNode
+                        delete hapus
+                        break
+                ELSE IF (pos.posisi equals to "Midfielder")
+                    IF (oldPlayer equals to midTail.nama) THEN
+                        WHILE (tmp.child not equals to midTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        newNode = alokasi(newPlayer)
+                        tmp.child <- newNode
+                        delete hapus
+                        break
+                ELSE
+                    IF (oldPlayer equals to defTail.nama) THEN
+                        WHILE (tmp.child not equals to defTail) DO
+                            tmp <- tmp.child
+                        hapus <- tmp.child
+                        newNode = alokasi(newPlayer)
+                        tmp.child <- newNode
+                        delete hapus
+                        break
+                WHILE (tmp not equals to NULL) DO
+                    IF (tmp.child.nama equals oldPlayer) THEN
+                        prev <- tmp
+                        hapus <- prev.child
+                        break
+                    tmp = tmp.child
+                newNode <- alokasi(newPlayer)
+                prev.child <- newNode
+                newNode.child <- hapus.child
+                hapus.child <- NULL
+                delete hapus
+            pos <- pos.next
+{END OF FUNCTION}
+
+FUNCTION tampil(posisi: string)
+    {Fungsi untuk menampilkan nama pemain berdasarkan posisi nya}
+    {Kamus Lokal}
+    pos, tmp: pointer to node
+    {Algoritma}
+    pos <- head
+    WHILE (pos not equals to NULL) DO
+        IF (pos.posisi equals to posisi)
+            output "pos.posisi"
+            WHILE (tmp not equals to NULL) DO
+                output "tmp.nama"
+                tmp <- tmp.child
+            break
+        pos <- pos.next
+{END OF FUNCTION}
+
+FUNCTION tampil_pemain()
+    {Fungsi untuk menampilkan semua nama pemain dan posisinya}
+    {Kamus Lokal}
+    pos, tmp: pointer to node
+    {Algoritma}
+    pos <- head.next
+    WHILE (pos not equals to NULL) DO
+        tmp <- pos.child
+        output "pos.posisi"
+        WHILE (tmp not equals to NULL) DO
+            output "tmp.nama"
+            tmp <- tmp.child
+        pos <- pos.child
+    output "Pemain"
+{END OF FUNCTION}
+
+FUNCTION hapus_pemain(newNode: pointer to node)
+    {Fungsi untuk menghapus semua pemain}
+    {Kamus Lokal}
+    pos, tmp, hapus: pointer to node
+    {Algoritma}
+    pos <- head
+    WHILE (pos not equals to NULL) DO
+        WHILE (pos.child not equals to NULL) DO
+            tmp <- pos
+            WHILE (tmp.child.child not equals to NULL) DO
+                tmp <- tmp.child
+            hapus <- tmp.child
+            tmp.child <- NULL
+            delete hapus
+        pos = pos.next
+{END OF FUNCTION}
+
+FUNCTION cari_pemain(nama: string)
+    {Fungsi untuk melakukan pencarian nama pemain berdasarkan input nama}
+    {Kamus Lokal}
+    pos, tmp: pointer to node
+    ketemu: boolean <- FALSE
+    {Algoritma}
+    pos <- head.next
+    WHILE (pos not equals to NULL) DO
+        tmp <- pos.child
+        WHILE (tmp not equals to NULL) DO
+            IF (tmp.nama equals to nama) THEN
+                output "tmp.nama, pos.posisi"
+                ketemu <- TRUE
+                break
+            tmp <- tmp.child
+        pos <- pos.next
+    IF (ketemu is FALSE) THEN
+        output "Nama pemain tidak ditemukan"
+{END OF FUNCTION}

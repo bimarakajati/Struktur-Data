@@ -1,0 +1,1 @@
+printAlamat(cur);

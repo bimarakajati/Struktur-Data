@@ -128,7 +128,7 @@ void hapusTengah(int x) // hapus data
         Hapus = head;
         while (Hapus != NULL)
         {
-            if (Hapus->data == x)
+            if (Hapus->data == x) // ketemu
             {
                 if (Hapus == head) // hapus awal
                 {
