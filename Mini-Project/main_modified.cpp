@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+#define Max 11
 
 struct node
 {
@@ -8,15 +9,25 @@ struct node
     node *next, *child;
 } * head, *tail;
 
-// var bantu
-node *pos, *tmp, *prevv, *hapus;
 // tail child
-node *strikerTail, *midTail, *defTail, *goalTail;
+node *strikeTail, *midTail, *defTail, *goalTail;
+// var bantu
+int Pemain = 0;
+int maxPemain = Max;
+// batasan formasi
+int strikeFormation = 0;
+int midFormation = 0;
+int defFormation = 0;
+// player counter
+int strikeCount = 0;
+int midCount = 0;
+int defCount = 0;
 
 bool cekSemuaPemain(string namaPemain)
 {
-    pos = head->next;
+    node *pos, *tmp;
     bool ketemu = false;
+    pos = head->next;
     while (pos != NULL) // cek posisi
     {
         tmp = pos;
@@ -25,7 +36,7 @@ bool cekSemuaPemain(string namaPemain)
             if (namaPemain == tmp->nama)
             {
                 ketemu = true;
-                return true;
+                return ketemu;
             }
             tmp = tmp->child;
         }
@@ -33,15 +44,16 @@ bool cekSemuaPemain(string namaPemain)
     }
     if (!ketemu)
     {
-        return false;
+        return ketemu;
     }
     return 0;
 }
 
 bool cekNamaPemain(string namaPemain, string posisi)
 {
-    pos = head;
+    node *pos, *tmp;
     bool ketemu = false;
+    pos = head;
     while (pos != NULL)
     {
         if (pos->posisi == posisi) // cek posisi
@@ -52,7 +64,7 @@ bool cekNamaPemain(string namaPemain, string posisi)
                 if (tmp->nama == namaPemain)
                 {
                     ketemu = true;
-                    return true;
+                    return ketemu;
                 }
                 tmp = tmp->child;
             }
@@ -61,7 +73,7 @@ bool cekNamaPemain(string namaPemain, string posisi)
     }
     if (!ketemu)
     {
-        return false;
+        return ketemu;
     }
     return 0;
 }
@@ -97,60 +109,106 @@ node *alokasi(string databaru)
 // tambah
 void tambah(node *newNode, string newPlayer, string posisi)
 {
-    if (cekSemuaPemain(newPlayer))
+    if (Pemain != maxPemain)
     {
-        printf("Pemain sudah ada");
+        if (cekSemuaPemain(newPlayer))
+        {
+            printf("Pemain sudah ada");
+        }
+        else
+        {
+            node *pos;
+            pos = head;
+            while (pos != NULL)
+            {
+                if (pos->posisi == posisi)
+                {
+                    newNode = alokasi(newPlayer);
+                    if (posisi == "Striker")
+                    {
+                        if (strikeCount != strikeFormation)
+                        {
+                            if (strikeTail == NULL)
+                            {
+                                pos->child = newNode;
+                                strikeTail = newNode;
+                            }
+                            else
+                            {
+                                strikeTail->child = newNode;
+                                strikeTail = newNode;
+                            }
+                            strikeCount += 1;
+                        }
+                        else
+                        {
+                            cout << "Formasi striker maksimal " << strikeFormation << endl;
+                        }
+                    }
+                    else if (posisi == "Midfielder")
+                    {
+                        if (midCount != midFormation)
+                        {
+                            if (midTail == NULL)
+                            {
+                                pos->child = newNode;
+                                midTail = newNode;
+                            }
+                            else
+                            {
+                                midTail->child = newNode;
+                                midTail = newNode;
+                            }
+                            midCount += 1;
+                        }
+                        else
+                        {
+                            cout << "Formasi midfielder maksimal " << midFormation << endl;
+                        }
+                    }
+                    else if (posisi == "Defender")
+                    {
+                        if (defCount != defFormation)
+                        {
+                            if (defTail == NULL)
+                            {
+                                pos->child = newNode;
+                                defTail = newNode;
+                            }
+                            else
+                            {
+                                defTail->child = newNode;
+                                defTail = newNode;
+                            }
+                            defCount += 1;
+                        }
+                        else
+                        {
+                            cout << "Formasi defender maksimal " << defFormation << endl;
+                        }
+                    }
+                    else // Goalkeeper
+                    {
+                        if (goalTail == NULL)
+                        {
+                            pos->child = newNode;
+                            goalTail = newNode;
+                        }
+                        else
+                        {
+                            goalTail->child = newNode;
+                            goalTail = newNode;
+                        }
+                    }
+                }
+                pos = pos->next;
+            }
+            Pemain += 1;
+        }
     }
     else
     {
-        pos = head;
-        while (pos != NULL)
-        {
-            if (pos->posisi == posisi)
-            {
-                newNode = alokasi(newPlayer);
-                if (posisi == "Striker")
-                {
-                    if (strikerTail == NULL)
-                    {
-                        pos->child = newNode;
-                        strikerTail = newNode;
-                    }
-                    else
-                    {
-                        strikerTail->child = newNode;
-                        strikerTail = newNode;
-                    }
-                }
-                else if (posisi == "Midfielder")
-                {
-                    if (midTail == NULL)
-                    {
-                        pos->child = newNode;
-                        midTail = newNode;
-                    }
-                    else
-                    {
-                        midTail->child = newNode;
-                        midTail = newNode;
-                    }
-                }
-                else // defender
-                {
-                    if (defTail == NULL)
-                    {
-                        pos->child = newNode;
-                        defTail = newNode;
-                    }
-                    else
-                    {
-                        defTail->child = newNode;
-                        defTail = newNode;
-                    }
-                }
-            }
-            pos = pos->next;
-        }
+        printf("Total pemain maksimal 11!\n");
     }
 }
 void tambah_striker(node *newNode, string newPlayer)
@@ -165,6 +223,10 @@ void tambah_defender(node *newNode, string newPlayer)
 {
     tambah(newNode, newPlayer, "Defender");
 }
+void tambah_goalkeeper(node *newNode, string newPlayer)
+{
+    tambah(newNode, newPlayer, "Goalkeeper");
+}
 
 // hapus
 void del(string namaPemain, string posisi)
@@ -175,6 +237,7 @@ void del(string namaPemain, string posisi)
     }
     else
     {
+        node *pos, *tmp, *prev, *hapus;
         pos = head;
         while (pos != NULL)
         {
@@ -184,15 +247,15 @@ void del(string namaPemain, string posisi)
                 // kondisi apabila nama player == tail
                 if (posisi == "Striker") // akhir striker
                 {
-                    if (namaPemain == strikerTail->nama)
+                    if (namaPemain == strikeTail->nama)
                     {
-                        while (tmp->child != strikerTail)
+                        while (tmp->child != strikeTail)
                         {
                             tmp = tmp->child;
                         }
                         hapus = tmp->child;
-                        prevv = tmp;
-                        prevv->child = NULL;
+                        prev = tmp;
+                        prev->child = NULL;
                         delete hapus;
                         break;
                     }
@@ -206,8 +269,8 @@ void del(string namaPemain, string posisi)
                             tmp = tmp->child;
                         }
                         hapus = tmp->child;
-                        prevv = tmp;
-                        prevv->child = NULL;
+                        prev = tmp;
+                        prev->child = NULL;
                         delete hapus;
                         break;
                     }
@@ -221,8 +284,8 @@ void del(string namaPemain, string posisi)
                             tmp = tmp->child;
                         }
                         hapus = tmp->child;
-                        prevv = tmp;
-                        prevv->child = NULL;
+                        prev = tmp;
+                        prev->child = NULL;
                         delete hapus;
                         break;
                     }
@@ -231,18 +294,19 @@ void del(string namaPemain, string posisi)
                 {
                     if (tmp->child->nama == namaPemain)
                     {
-                        prevv = tmp;
-                        hapus = prevv->child;
+                        prev = tmp;
+                        hapus = prev->child;
                         break;
                     }
                     tmp = tmp->child;
                 }
-                prevv->child = hapus->child;
+                prev->child = hapus->child;
                 hapus->child = NULL;
                 delete hapus;
             }
             pos = pos->next;
         }
+        Pemain -= 1;
     }
 }
 void hapus_striker(string namaPemain)
@@ -273,6 +337,7 @@ void subtitusi(node *newNode, string oldPlayer, string newPlayer, string posisi)
         }
         else
         {
+            node *pos, *tmp, *hapus, *prev;
             pos = head;
             while (pos != NULL)
             {
@@ -282,16 +347,14 @@ void subtitusi(node *newNode, string oldPlayer, string newPlayer, string posisi)
                     // kondisi apabila nama player == tail
                     if (pos->posisi == "Striker")
                     {
-                        if (oldPlayer == strikerTail->nama)
+                        if (oldPlayer == strikeTail->nama)
                         {
-                            while (tmp->child != strikerTail)
+                            while (tmp->child != strikeTail)
                             {
                                 tmp = tmp->child;
                             }
                             hapus = tmp->child;
-                            newNode = new node;
-                            newNode->nama = newPlayer;
-                            newNode->child = NULL;
+                            newNode = alokasi(newPlayer);
                             tmp->child = newNode;
                             delete hapus;
                             break;
@@ -306,9 +369,7 @@ void subtitusi(node *newNode, string oldPlayer, string newPlayer, string posisi)
                                 tmp = tmp->child;
                             }
                             hapus = tmp->child;
-                            newNode = new node;
-                            newNode->nama = newPlayer;
-                            newNode->child = NULL;
+                            newNode = alokasi(newPlayer);
                             tmp->child = newNode;
                             delete hapus;
                             break;
@@ -333,14 +394,14 @@ void subtitusi(node *newNode, string oldPlayer, string newPlayer, string posisi)
                     {
                         if (tmp->child->nama == oldPlayer)
                         {
-                            prevv = tmp;
-                            hapus = prevv->child;
+                            prev = tmp;
+                            hapus = prev->child;
                             break;
                         }
                         tmp = tmp->child;
                     }
                     newNode = alokasi(newPlayer);
-                    prevv->child = newNode;
+                    prev->child = newNode;
                     newNode->child = hapus->child;
                     hapus->child = NULL;
                     delete hapus;
@@ -366,6 +427,7 @@ void subtitusi_defender(node *newNode, string oldPlayer, string newPlayer)
 // tampil
 void tampil(string posisi)
 {
+    node *pos, *tmp;
     pos = head;
     while (pos != NULL)
     {
@@ -401,9 +463,9 @@ void tampil_defender()
 {
     tampil("Defender");
 }
-
 void tampil_pemain()
 {
+    node *pos, *tmp;
     pos = head->next;
     while (pos != NULL)
     {
@@ -422,42 +484,41 @@ void tampil_pemain()
         printf("\n");
         pos = pos->next;
     }
+    cout << "Total pemain: " << Pemain << endl;
 }
 
-void hapusChild(node *newNode)
+void hapus_pemain()
 {
-    while (newNode->child->child != NULL)
-    {
-        newNode = newNode->child;
-    }
-    hapus = newNode->child;
-    newNode->child = NULL;
-    delete hapus;
-}
-
-void hapus_pemain(node *newNode)
-{
+    node *pos, *tmp, *hapus;
     pos = head;
     while (pos != NULL)
     {
         while (pos->child != NULL)
         {
-            hapusChild(pos);
+            tmp = pos;
+            while (tmp->child->child != NULL)
+            {
+                tmp = tmp->child;
+            }
+            hapus = tmp->child;
+            tmp->child = NULL;
+            delete hapus;
         }
         pos = pos->next;
     }
 }
 
-void cari_pemain(string find_player)
+void cari_pemain(string nama)
 {
-    pos = head->next;
+    node *pos, *tmp;
     bool ketemu = false;
+    pos = head->next;
     while (pos != NULL)
     {
         tmp = pos->child;
         while (tmp != NULL)
         {
-            if (tmp->nama == find_player)
+            if (tmp->nama == nama)
             {
                 cout << "[" << tmp->nama << "]"
                      << " ada di posisi " << pos->posisi << endl;
@@ -474,27 +535,28 @@ void cari_pemain(string find_player)
     }
 }
 
-// etc
-void tambah_goalkeeper(node *newNode, string newPlayer)
+// challenges
+void viewStats()
 {
-    if (cekSemuaPemain(newPlayer))
+    node *pos, *tmp;
+    int counter = 0; // var lokal
+    pos = head->next;
+    printf("=== Statistik Pemain Saat Ini ===\n");
+    while (pos != NULL) // outer loop posisi
     {
-        printf("Pemain sudah ada");
-    }
-    else
-    {
-        pos = head;
-        while (pos != NULL)
+        tmp = pos->child;
+        cout << pos->posisi << ": ";
+        while (tmp != NULL) // inner loop pemain
         {
-            if (pos->posisi == "Goalkeeper")
-            {
-                newNode = alokasi(newPlayer);
-                pos->child = newNode;
-                goalTail = newNode;
-            }
-            pos = pos->next;
+            counter += 1;
+            tmp = tmp->child;
         }
+        cout << counter << endl;
+        counter = 0; // counter balik ke 0
+        pos = pos->next;
     }
+    printf("\n=== Nama Pemain ===\n");
+    tampil_pemain();
 }
 
 // main
@@ -507,41 +569,55 @@ int main()
     buat_posisi(list, "Defender");
     buat_posisi(list, "Goalkeeper");
 
-    // formasi 2-4-4
+    // inputan formasi
+    int strikeFor, midFor, defFor;
+    printf("Masukkan jumlah striker        : ");
+    cin >> strikeFor;
+    printf("Masukkan jumlah middlefielder  : ");
+    cin >> midFor;
+    printf("Masukkan jumlah defender       : ");
+    cin >> defFor;
+    printf("\n");
+
+    // formasi 4-4-2
+    strikeFormation = strikeFor;
+    midFormation = midFor;
+    defFormation = defFor;
+
     tambah_goalkeeper(list, "keeper1");
 
     tambah_striker(list, "striker1");
     tambah_striker(list, "striker2");
-    tambah_striker(list, "striker3");
-    // cout << strikerTail->nama << endl;
-    hapus_striker("striker2");
-    subtitusi_striker(list, "striker3", "strikerBaru");
+    // tambah_striker(list, "striker3"); // maks 2
+    // hapus_striker("striker2");
+    // subtitusi_striker(list, "striker2", "strikerBaru");
 
     tambah_midfielder(list, "mid1");
     tambah_midfielder(list, "mid2");
     tambah_midfielder(list, "mid3");
     tambah_midfielder(list, "mid4");
-    // cout << midTail->nama << endl;
-    hapus_midfielder("mid4");
-    subtitusi_midfielder(list, "mid2", "midBaru");
+    // tambah_midfielder(list, "mid5"); // maks 4
+    // hapus_midfielder("mid4");
+    // subtitusi_midfielder(list, "mid2", "midBaru");
 
     tambah_defender(list, "def1");
     tambah_defender(list, "def2");
     tambah_defender(list, "def3");
     tambah_defender(list, "def4");
-    // cout << defTail->nama << endl;
-    hapus_defender("def2");
-    subtitusi_defender(list, "def1", "defBaru");
+    // tambah_defender(list, "def5"); // maks 11
+    // hapus_defender("def2");
+    // subtitusi_defender(list, "def1", "defBaru");
 
-    tampil_pemain();
+    // tampil_pemain();
+    viewStats();
     // tampil_striker();
     // tampil_midfielder();
     // tampil_defender();
 
-    cari_pemain("def4");
-    cari_pemain("def10");
+    // cari_pemain("def4");
+    // cari_pemain("def10");
 
-    hapus_pemain(list);
-    tampil_pemain();
+    // hapus_pemain();
+    // tampil_pemain();
     return 0;
 }
